@@ -7,13 +7,14 @@
 #include <libopencm3/stm32/gpio.h>
 
 /* User LED (LD2) connected to Arduino-D13 pin. */
-#define RCC_LED_GPIO (RCC_GPIOA)
-#define GPIO_LED_PORT (GPIOA)
-#define GPIO_LED_PIN (GPIO5)
-#define GPIO_DIR_PORT (GPIOA)
-#define GPIO_DIR_PIN (GPIO9)
+#define RCC_MotoCH_GPIO (RCC_GPIOA)
+#define GPIO_MotoOne_PORT (GPIOA)
+#define GPIO_MotoOne_PIN (GPIO5)
+#define GPIO_MotoOneDIR_PORT (GPIOA)
+#define GPIO_MotoOneDIR_PIN (GPIO9)
 
-int n = 20000;
+int n = 1500;
+int t = 100;
 
 
 static void delay(uint32_t value)
@@ -27,39 +28,45 @@ static void delay(uint32_t value)
 int main(void)
 {
   /* Enable clock. */
-  rcc_periph_clock_enable(RCC_LED_GPIO);
+  rcc_periph_clock_enable(RCC_MotoCH_GPIO);
 
   /* Set LED pin to output push-pull. */
-  gpio_mode_setup(GPIO_LED_PORT,
+  gpio_mode_setup(GPIO_MotoOne_PORT,
                   GPIO_MODE_OUTPUT,
                   GPIO_PUPD_NONE,
-                  GPIO_LED_PIN);
+                  GPIO_MotoOne_PIN);
 
-  gpio_set_output_options(GPIO_LED_PORT,
+  gpio_set_output_options(GPIO_MotoOne_PORT,
                           GPIO_OTYPE_PP,
                           GPIO_OSPEED_2MHZ,
-                          GPIO_LED_PIN);
+                          GPIO_MotoOne_PIN);
 
-  gpio_mode_setup(GPIO_DIR_PORT,
+  gpio_mode_setup(GPIO_MotoOneDIR_PORT,
                   GPIO_MODE_OUTPUT,
                   GPIO_PUPD_NONE,
-                  GPIO_DIR_PIN);
+                  GPIO_MotoOneDIR_PIN);
 
-  gpio_set_output_options(GPIO_DIR_PORT,
+  gpio_set_output_options(GPIO_MotoOneDIR_PORT,
                           GPIO_OTYPE_PP,
                           GPIO_OSPEED_2MHZ,
-                          GPIO_DIR_PIN);
+                          GPIO_MotoOneDIR_PIN);
 
   /* Start blinking. */
   while (1)
   {
+    t--;
+    int s = 10000;
     if(n == 0)
     {
-      n = 10000;
-      gpio_toggle(GPIO_DIR_PORT, GPIO_DIR_PIN); /* Direction pin toggle. */
+      n = 1500;
+      gpio_toggle(GPIO_MotoOneDIR_PORT, GPIO_MotoOneDIR_PIN); /* Direction pin toggle. */
     }
-    gpio_toggle(GPIO_LED_PORT, GPIO_LED_PIN); /* LED on/off. */
-    delay(2000);
+    if(t <= 0)
+    {
+        s = 2000;
+    }
+    gpio_toggle(GPIO_MotoOne_PORT, GPIO_MotoOne_PIN); /* LED on/off. */
+    delay(s);
     n--;
   }
 
