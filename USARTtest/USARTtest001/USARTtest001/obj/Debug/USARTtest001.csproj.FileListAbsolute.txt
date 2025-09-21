@@ -1,0 +1,10 @@
+C:\Users\user\Desktop\robots arm\USARTtest\USARTtest001\USARTtest001\bin\Debug\USARTtest001.exe.config
+C:\Users\user\Desktop\robots arm\USARTtest\USARTtest001\USARTtest001\bin\Debug\USARTtest001.exe
+C:\Users\user\Desktop\robots arm\USARTtest\USARTtest001\USARTtest001\bin\Debug\USARTtest001.pdb
+C:\Users\user\Desktop\robots arm\USARTtest\USARTtest001\USARTtest001\obj\Debug\USARTtest001.csproj.AssemblyReference.cache
+C:\Users\user\Desktop\robots arm\USARTtest\USARTtest001\USARTtest001\obj\Debug\USARTtest001.Form1.resources
+C:\Users\user\Desktop\robots arm\USARTtest\USARTtest001\USARTtest001\obj\Debug\USARTtest001.Properties.Resources.resources
+C:\Users\user\Desktop\robots arm\USARTtest\USARTtest001\USARTtest001\obj\Debug\USARTtest001.csproj.GenerateResource.cache
+C:\Users\user\Desktop\robots arm\USARTtest\USARTtest001\USARTtest001\obj\Debug\USARTtest001.csproj.CoreCompileInputs.cache
+C:\Users\user\Desktop\robots arm\USARTtest\USARTtest001\USARTtest001\obj\Debug\USARTtest001.exe
+C:\Users\user\Desktop\robots arm\USARTtest\USARTtest001\USARTtest001\obj\Debug\USARTtest001.pdb
