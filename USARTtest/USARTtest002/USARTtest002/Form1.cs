@@ -23,7 +23,7 @@ namespace USARTtest002
 
         CheckBox chkCRLF = new CheckBox { Left = 10, Top = 50, Width = 120, Text = "附加 CRLF (\\r\\n)", Checked = false }; // 是否附加 CRLF 勾選
         Button btnSend0001 = new Button { Left = 150, Top = 46, Width = 120, Height = 28, Text = "Send 0001", Enabled = false }; // 送出 "0001" 的按鈕，預設不能按
-        Button btnSend0010 = new Button { Left = 300, Top = 46, Width = 200, Height = 28, Text = "Send 0010", Enabled = false }; // 送出 "0010" 的按鈕，預設不能按
+        Button btnSend0010 = new Button { Left = 300, Top = 46, Width = 120, Height = 28, Text = "Send 0010", Enabled = false }; // 送出 "0010" 的按鈕，預設不能按
         Label lblStatus = new Label { Left = 10, Top = 85, Width = 500, Text = "未連線" };     // 狀態文字
 
         public Form1()                // 建構子：視窗建立時執行
@@ -39,6 +39,7 @@ namespace USARTtest002
             Controls.Add(btnClose);
             Controls.Add(chkCRLF);
             Controls.Add(btnSend0001);
+            Controls.Add(btnSend0010);
             Controls.Add(lblStatus);
 
             cboBaud.Items.AddRange(new object[] { "9600", "19200", "38400", "57600", "115200" }); // 波特率選項
@@ -48,6 +49,7 @@ namespace USARTtest002
             btnConnect.Click += (_, __) => Connect();      // Connect 按下觸發連線
             btnClose.Click += (_, __) => Disconnect();   // Close 按下觸發關閉
             btnSend0001.Click += (_, __) => Send0001();    // Send 0001 按下觸發送資料
+            btnSend0010.Click += (_, __) => Send0010();   // Send 0001 按下觸發送資料
 
             // SerialPort 基本參數：115200, 8N1, 無流控（此處先設固定屬性，PortName/ BaudRate 稍後由 UI 設定）
             _sp.DataBits = 8;                 // 8 個資料位
@@ -78,7 +80,8 @@ namespace USARTtest002
                 _sp.BaudRate = int.Parse(cboBaud.SelectedItem.ToString()); // 設定波特率（字串轉 int）
                 _sp.Open();                                         // 開啟串列埠
 
-                btnSend0001.Enabled = true;                         // 開啟後允許送資料
+                btnSend0001.Enabled = true;// 開啟後允許送資料0001
+                btnSend0010.Enabled = true;// 開啟後允許送資料0010
                 btnConnect.Enabled = false;                         // 禁用 Connect（避免重複連）
                 btnClose.Enabled = true;                            // 允許 Close
                 cboPort.Enabled = cboBaud.Enabled = btnRefresh.Enabled = false; // 連線後鎖定下拉與 Refresh
@@ -95,6 +98,7 @@ namespace USARTtest002
         {
             try { if (_sp.IsOpen) _sp.Close(); } catch { }          // 若開著就關掉（忽略關閉例外）
             btnSend0001.Enabled = false;                            // 關閉後不能送
+            btnSend0010.Enabled = false;
             btnConnect.Enabled = true;                              // 允許重新 Connect
             btnClose.Enabled = false;                               // 關閉按鈕失效
             cboPort.Enabled = cboBaud.Enabled = btnRefresh.Enabled = true; // 重新開放下拉與 Refresh
@@ -107,11 +111,29 @@ namespace USARTtest002
             try
             {
                 if (chkCRLF.Checked)                  // 若勾選附加 CRLF
-                    _sp.Write("0001\r\n");           // 傳送 "0001" 並加上 \r\n（多數韌體把 CR/LF 視為換行）
+                    _sp.Write("1\r\n");           // 傳送 "0001" 並加上 \r\n（多數韌體把 CR/LF 視為換行）
                 else
-                    _sp.Write("0001");               // 只傳 ASCII 字元 '0','0','0','1'
+                    _sp.Write("1");               // 只傳 ASCII 字元 '0','0','0','1'
 
                 lblStatus.Text = "已送出：0001" + (chkCRLF.Checked ? @" (CRLF)" : ""); // 更新狀態：顯示是否帶 CRLF
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("送出失敗： " + ex.Message);        // 傳輸失敗顯示錯誤
+            }
+        }
+
+        private void Send0010()       // 實際送出字串 "0001"
+        {
+            if (!_sp.IsOpen) return;  // 沒連線就不送
+            try
+            {
+                if (chkCRLF.Checked)                  // 若勾選附加 CRLF
+                    _sp.Write("2\r\n");           // 傳送 "0001" 並加上 \r\n（多數韌體把 CR/LF 視為換行）
+                else
+                    _sp.Write("2");               // 只傳 ASCII 字元 '0','0','0','1'
+
+                lblStatus.Text = "已送出：0010" + (chkCRLF.Checked ? @" (CRLF)" : ""); // 更新狀態：顯示是否帶 CRLF
             }
             catch (Exception ex)
             {

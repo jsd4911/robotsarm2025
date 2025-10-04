@@ -8,3 +8,4 @@ C:\Users\user\Desktop\robots arm\USARTtest\USARTtest002\USARTtest002\bin\Debug\U
 C:\Users\user\Desktop\robots arm\USARTtest\USARTtest002\USARTtest002\bin\Debug\USARTtest002.pdb
 C:\Users\user\Desktop\robots arm\USARTtest\USARTtest002\USARTtest002\obj\Debug\USARTtest002.exe
 C:\Users\user\Desktop\robots arm\USARTtest\USARTtest002\USARTtest002\obj\Debug\USARTtest002.pdb
+C:\Users\user\Desktop\robots arm\USARTtest\USARTtest002\USARTtest002\obj\Debug\USARTtest002.exe.config
