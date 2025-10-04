@@ -21,9 +21,9 @@ namespace USARTtest002
         Button btnConnect = new Button { Left = 340, Top = 10, Width = 80, Text = "Connect" }; // 連線按鈕
         Button btnClose = new Button { Left = 430, Top = 10, Width = 80, Text = "Close", Enabled = false }; // 關閉按鈕，預設不能按
 
-        CheckBox chkCRLF = new CheckBox { Left = 10, Top = 50, Width = 180, Text = "附加 CRLF (\\r\\n)", Checked = false }; // 是否附加 CRLF 勾選
-        Button btnSend0001 = new Button { Left = 200, Top = 46, Width = 120, Height = 28, Text = "Send 0001", Enabled = false }; // 送出 "0001" 的按鈕，預設不能按
-
+        CheckBox chkCRLF = new CheckBox { Left = 10, Top = 50, Width = 120, Text = "附加 CRLF (\\r\\n)", Checked = false }; // 是否附加 CRLF 勾選
+        Button btnSend0001 = new Button { Left = 150, Top = 46, Width = 120, Height = 28, Text = "Send 0001", Enabled = false }; // 送出 "0001" 的按鈕，預設不能按
+        Button btnSend0010 = new Button { Left = 300, Top = 46, Width = 200, Height = 28, Text = "Send 0010", Enabled = false }; // 送出 "0010" 的按鈕，預設不能按
         Label lblStatus = new Label { Left = 10, Top = 85, Width = 500, Text = "未連線" };     // 狀態文字
 
         public Form1()                // 建構子：視窗建立時執行
