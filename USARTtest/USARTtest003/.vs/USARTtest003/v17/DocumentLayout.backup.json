@@ -7,7 +7,7 @@
       "RelativeMoniker": "D:0:0:{D8DA2C04-3819-4896-A933-D43D9B31CB92}|USARTtest003\\USARTtest003.csproj|solutionrelative:usarttest003\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{D8DA2C04-3819-4896-A933-D43D9B31CB92}|USARTtest003\\USARTtest003.csproj|c:\\users\\user\\desktop\\robots arm\\usarttest\\usarttest003\\usarttest003\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "AbsoluteMoniker": "D:0:0:{D8DA2C04-3819-4896-A933-D43D9B31CB92}|USARTtest003\\USARTtest003.csproj|C:\\Users\\user\\Desktop\\robots arm\\USARTtest\\USARTtest003\\usarttest003\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
       "RelativeMoniker": "D:0:0:{D8DA2C04-3819-4896-A933-D43D9B31CB92}|USARTtest003\\USARTtest003.csproj|solutionrelative:usarttest003\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     }
   ],
@@ -18,7 +18,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
@@ -28,7 +28,7 @@
               "RelativeDocumentMoniker": "USARTtest003\\Form1.cs",
               "ToolTip": "C:\\Users\\user\\Desktop\\robots arm\\USARTtest\\USARTtest003\\USARTtest003\\Form1.cs",
               "RelativeToolTip": "USARTtest003\\Form1.cs",
-              "ViewState": "AgIAAD0AAAAAAAAAAAAAwIQAAAAJAAAAAAAAAA==",
+              "ViewState": "AgIAAH8AAAAAAAAAAAAiwIMAAAAzAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-10-03T06:41:28.077Z",
               "EditorCaption": ""
@@ -42,12 +42,25 @@
               "ToolTip": "C:\\Users\\user\\Desktop\\robots arm\\USARTtest\\USARTtest003\\USARTtest003\\Form1.cs [\u8A2D\u8A08]",
               "RelativeToolTip": "USARTtest003\\Form1.cs [\u8A2D\u8A08]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-03T06:41:25.742Z",
-              "EditorCaption": " [\u8A2D\u8A08]"
+              "WhenOpened": "2025-10-03T06:41:25.742Z"
             }
           ]
         }
       ]
+    },
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "FloatingWindowState": {
+        "Id": "fa421cbd-4957-45d0-8057-1ec0ce5b5c92",
+        "Display": 0,
+        "X": 137,
+        "Y": 200,
+        "Width": 1484,
+        "Height": 847,
+        "WindowState": 0
+      },
+      "DocumentGroups": []
     }
   ]
 }

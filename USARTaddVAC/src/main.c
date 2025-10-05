@@ -8,6 +8,16 @@
 #define CH     0             // 要量的 ADC 通道：ADC1_IN0 = PA0
 #define BAUD   115200        // 串口鮑率
 
+#define MotoOne_rightcommand "1"
+#define MotoOne_leftcommand "2"
+#define TARGET_LEN 1
+
+#define GPIO_MotoOne_PORT (GPIOA)
+#define GPIO_MotoOne_PIN (GPIO5)
+#define GPIO_MotoOneDIR_PORT (GPIOA)
+#define GPIO_MotoOneDIR_PIN (GPIO9)
+int act = 0;
+
 static void clock_setup(void) {
     // 84MHz：用 HSI → PLL，把系統時脈設為 84MHz，確保鮑率計算正確
     rcc_clock_setup_pll(&rcc_hsi_configs[RCC_CLOCK_3V3_84MHZ]);
@@ -36,24 +46,33 @@ static void usart2_setup(void){
     usart_enable(USART2);// 啟用 USART2
 }
 
+//static inline void pc_putc(char c) { usart_send_blocking(USART2, (uint16_t)c); }
+static inline int  rx_ready(void)  { return usart_get_flag(USART2, USART_SR_RXNE); } // F4 用 SR
+
 static inline void u2_putc(char c){ usart_send_blocking(USART2, (uint16_t)c); }// 傳一個字元（阻塞直到硬體送出）
 static void u2_puts(const char*s){ while(*s) u2_putc(*s++); }// 逐字送出字串直到 '\0'
 
 static void u2_putu32(uint32_t v){
-    char buf[10]; int i=0;
-    if (!v){ u2_putc('0'); return; }
-    while(v && i<10){ buf[i++] = '0' + (v%10); v/=10; }
-    while(i--) u2_putc(buf[i]);
+    char buf[10]; // 最多 10 位數
+    int i=0;
+    if (!v){ u2_putc('0'); return; }// 特例：0 直接輸出 '0'
+    while(v && i<10){ buf[i++] = '0' + (v%10); v/=10; }// 取個位數、轉成字元:去掉個位數
+    while(i--) u2_putc(buf[i]);// 2) 倒著吐回去 → 正確的十進位順序
 }
-static void u2_puti32(int32_t v){
-    if (v<0){ u2_putc('-'); v = -v; }
-    u2_putu32((uint32_t)v);
+static void u2_puti32(int32_t v){ //宣告一個只在本檔案可見的函式，名為 u2_puti32。參數 v 是要輸出的有號 32 位整數。
+    if (v<0){ u2_putc('-'); v = -v; }//如果 v 是負數：
+//先用 u2_putc('-') 送出一個減號字元到 USART（相當於在螢幕上先印出 -）。
+//然後把 v 變成它的相反數（變回正數），方便後面用「無號整數印字」的流程處理每一位數字。
+    u2_putu32((uint32_t)v);//把現在的（非負）數值轉成 uint32_t，交給 u2_putu32 去逐位印出十進位數字
 }
 
 static void led_setup(void){
     rcc_periph_clock_enable(RCC_GPIOA); // 開 GPIOA 時鐘（PA5 在 A 組）
-    gpio_mode_setup(GPIOA, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO5); // PA5 設為推挽輸出
-    gpio_clear(GPIOA, GPIO5); // 先關燈（輸出低）
+    gpio_mode_setup(GPIO_MotoOne_PORT, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO_MotoOne_PIN);
+    gpio_set_output_options(GPIO_MotoOne_PORT,GPIO_OTYPE_PP,GPIO_OSPEED_2MHZ,GPIO_MotoOne_PIN);
+    gpio_mode_setup(GPIO_MotoOneDIR_PORT,GPIO_MODE_OUTPUT,GPIO_PUPD_NONE,GPIO_MotoOneDIR_PIN);
+    gpio_set_output_options(GPIO_MotoOneDIR_PORT,GPIO_OTYPE_PP,GPIO_OSPEED_2MHZ,GPIO_MotoOneDIR_PIN);
+    gpio_clear(GPIO_MotoOne_PORT, GPIO_MotoOne_PIN); // 先關燈
 }
 
 /* ---- ADC1 單通道、單次轉換，PA0 ---- */
@@ -145,7 +164,7 @@ int main(void){
         //n += sprintf(line + n, "%d.", v_int); // 印整數部份與小數點
         //n += sprintf(line + n, "%02d V", v_dec); // 印兩位小數與單位、換行
         int32_t Voltage = ((v_int *100) + v_dec) - 60;//整數伏特放大100倍加兩位小數電壓為實際電壓放大100倍，2.8V~0.6V為180~0度，0度對應0.6V所以減60
-        u2_puts("\r\n Angle = \n\r");
+        u2_puts("\r\n[ACK] Angle = \n\r");
         int32_t A = Voltage/1.15;//電壓轉換角度公式，分母做微調
         u2_puti32(A);
         //sprintf(line + n,"  Angle = %d°\r\n", A);
@@ -153,11 +172,80 @@ int main(void){
 
         u2_puts("\r\n[STM32 READY] Send OK.\r\n");
 
-        /* 閃一下 LED 當心跳 */
-        gpio_toggle(GPIOA, GPIO5); // LED 閃一下（心跳/取樣指示）
-
         /* 約 200ms（粗略） */
         delay(1200000); // 粗略延遲 ≈200ms（視時脈而定）
+
+
+        if (rx_ready()) {
+            char c = (char)usart_recv(USART2); //讀取發送值
+
+            // 回顯到 PC（WinForms 或 PIO Monitor 會看到你打的字）
+            u2_putc(c);
+            
+            
+            //if (c == MotoOne_rightcommand) {
+                //act = 1;
+                
+            //}
+            //if (c == MotoOne_leftcommand) {
+                //act = 2;
+                
+            //}
+
+            switch (c)
+            {
+            case '1':
+                gpio_set(GPIO_MotoOneDIR_PORT, GPIO_MotoOneDIR_PIN);
+                int s_a = 100000;
+                while (c == '1')
+                {
+                    c = (char)usart_recv(USART2);
+                    if (s_a < 5000)
+                    {
+                        s_a = 3500;
+                    }
+                    gpio_toggle(GPIO_MotoOne_PORT, GPIO_MotoOne_PIN);
+                    delay(s_a);
+                    s_a = s_a - 2000 ;
+                    
+                }
+                for(int Speed = 3500; Speed <= 100000; Speed+= 5000)
+                {
+                    gpio_toggle(GPIO_MotoOne_PORT, GPIO_MotoOne_PIN);
+                    delay(Speed);
+                }
+                break;
+            
+            case '2':
+                gpio_clear(GPIO_MotoOneDIR_PORT, GPIO_MotoOneDIR_PIN);
+                int s_b =100000;
+                while (c == '2')
+                {
+                    c = (char)usart_recv(USART2);
+                    if (s_b < 5000)
+                    {
+                        s_b = 3500;
+                    }
+                    gpio_toggle(GPIO_MotoOne_PORT, GPIO_MotoOne_PIN);
+                    delay(s_b);
+                    s_b = s_b - 2000 ;
+                    
+                }
+                for(int Speed = 3500; Speed <= 100000; Speed+= 5000)
+                {
+                    gpio_toggle(GPIO_MotoOne_PORT, GPIO_MotoOne_PIN);
+                    delay(Speed);
+                }
+                break;
+            
+            default:
+                break;
+            }
+            
+            
+        }
+
+
         
         //if (usart_get_flag(USART2, USART_SR_RXNE)) {     // 有接收資料（F4 用 SR_RXNE）
             //char c = (char)usart_recv(USART2);// 讀一個字元（同時清 RXNE）
